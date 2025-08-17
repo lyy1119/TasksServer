@@ -50,3 +50,24 @@
           email:
             type: string
             format: email
+
+## v1.0.0 - 2025-08-17
+### Added
+- 定义 `/users` 相关接口：
+  - `GET /users` 获取所有用户
+  - `POST /users` 创建用户
+  - `GET /users/{id}` 获取单个用户
+  - `PUT /users/{id}` 更新用户
+  - `DELETE /users/{id}` 删除用户
+- 定义 `/tasks` 相关接口：
+  - `GET /tasks` 获取所有任务
+  - `POST /tasks` 创建任务
+  - `GET /tasks/{id}` 获取单个任务
+  - `PUT /tasks/{id}` 更新任务
+  - `DELETE /tasks/{id}` 删除任务
+- 数据模型（Schemas）：
+  - `User`, `UserCreate`, `UserUpdate`
+  - `Task`, `TaskCreate`, `TaskUpdate`
+- 服务器配置：
+  - `http://localhost:8080`（开发环境）
+  - `https://api.example.com`（生产环境）
