@@ -13,6 +13,25 @@ servers:
     description: Production server
 
 paths:
+  /healthz:
+    get:
+      summary: Health check
+      description: Simple liveness check. Returns 200 if service and DB are alive.
+      responses:
+        '200':
+          description: Service is alive
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  time:
+                    type: string
+                    format: date-time
+        '503':
+          description: Service is not ready
   /users:
     get:
       summary: Get all users
