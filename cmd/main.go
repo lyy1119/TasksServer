@@ -18,7 +18,7 @@ func main() {
 		port, err := strconv.Atoi(os.Args[2])
 		if err != nil {
 			port = 8080
-			fmt.Println("Invalid Port \"%s\", use 8080 as default", os.Args[2])
+			fmt.Printf("Invalid Port \"%s\", use 8080 as default", os.Args[2])
 		}
 		portAssign = fmt.Sprintf(":%d", port)
 	}
