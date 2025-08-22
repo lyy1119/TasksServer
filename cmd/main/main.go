@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"strconv"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -17,18 +15,12 @@ import (
 )
 
 func main() {
-	portAssign := ":8080"
 
-	if len(os.Args) >= 3 && (os.Args[1] == "-p" || os.Args[1] == "-P") {
-		// main -p 8080
-		// 尝试将第三个参数转化为整数类型
-		port, err := strconv.Atoi(os.Args[2])
-		if err != nil {
-			port = 8080
-			fmt.Printf("Invalid Port \"%s\", use %s as default\n", os.Args[2], portAssign)
-		}
-		portAssign = fmt.Sprintf(":%d", port)
-	}
+	fmt.Println("Loading Config...")
+	cfg := config.GetConfig()
+
+	port := fmt.Sprintf(":%d", cfg.Port)
+	fmt.Println("Notice: Server will start at", port)
 
 	r := chi.NewRouter()
 	server := myapi.NewServer()
@@ -40,9 +32,6 @@ func main() {
 		sub.Mount("/", h)
 	})
 
-	fmt.Println("Loading Config...")
-	cfg := config.GetConfig()
-
 	fmt.Println("Connecting MYSQL...")
 
 	db.Open(context.Background(), db.Config{
@@ -52,7 +41,6 @@ func main() {
 		ConnMaxLifetime: time.Hour,
 		PingTimeout:     3 * time.Second})
 
-	fmt.Println("Server started at", portAssign)
-	log.Fatal(http.ListenAndServe(portAssign, r))
+	log.Fatal(http.ListenAndServe(port, r))
 
 }
