@@ -5,15 +5,17 @@ import (
 )
 
 type Config struct {
-	mysqlAccount  string
-	mysqlPassword string
-	mysqlAddress  string
+	MysqlAccount  string
+	MysqlPassword string
+	MysqlAddress  string
+	MysqlDBName   string
 }
 
 func GetConfig() Config {
 	result := Config{
-		mysqlAccount:  os.Getenv("MYSQL_ACCOUNT"),
-		mysqlPassword: os.Getenv("MYSQL_PWD"),
-		mysqlAddress:  os.Getenv("MYSQL_ADDR")}
+		MysqlAccount:  os.Getenv("MYSQL_ACCOUNT"),
+		MysqlPassword: os.Getenv("MYSQL_PWD"),
+		MysqlAddress:  os.Getenv("MYSQL_ADDR"),
+		MysqlDBName:   os.Getenv("MYSQL_DB_NAME")}
 	return result
 }

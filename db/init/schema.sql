@@ -1,8 +1,8 @@
 -- 创建数据库（如果不存在）
-CREATE DATABASE IF NOT EXISTS todo
+CREATE DATABASE IF NOT EXISTS tasks
   DEFAULT CHARACTER SET utf8mb4
   COLLATE utf8mb4_0900_ai_ci;
-USE todo;
+USE tasks;
 
 -- 严格模式，防止 MySQL 自动截断或容错写脏数据
 SET sql_mode = 'STRICT_ALL_TABLES';

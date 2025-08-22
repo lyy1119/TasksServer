@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"database/sql"
-	"strconv"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -17,10 +16,10 @@ type Config struct {
 	PingTimeout     time.Duration // 例如 3 * time.Second
 }
 
-func BuildDSN(user, pass, host string, port int, dbname string) string {
+func BuildDSN(user, pass, addr string, dbname string) string {
 	// parseTime/charset/loc 基本是 Web 场景的合理默认
 	return user + ":" + pass +
-		"@tcp(" + host + ":" + strconv.Itoa(port) + ")/" + dbname +
+		"@tcp(" + addr + ")/" + dbname +
 		"?parseTime=true&charset=utf8mb4&loc=Local"
 }
 

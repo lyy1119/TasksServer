@@ -1,14 +1,18 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	myapi "github.com/lyy1119/TasksServer/internal/api"
+	"github.com/lyy1119/TasksServer/internal/config"
+	"github.com/lyy1119/TasksServer/internal/db"
 	"github.com/lyy1119/TasksServer/internal/openapi"
 )
 
@@ -35,6 +39,18 @@ func main() {
 		h := openapi.HandlerFromMux(server, sub)
 		sub.Mount("/", h)
 	})
+
+	fmt.Println("Loading Config...")
+	cfg := config.GetConfig()
+
+	fmt.Println("Connecting MYSQL...")
+
+	db.Open(context.Background(), db.Config{
+		DSN:             db.BuildDSN(cfg.MysqlAccount, cfg.MysqlPassword, cfg.MysqlAddress, cfg.MysqlDBName),
+		MaxOpenConns:    20,
+		MaxIdleConns:    5,
+		ConnMaxLifetime: time.Hour,
+		PingTimeout:     3 * time.Second})
 
 	fmt.Println("Server started at", portAssign)
 	log.Fatal(http.ListenAndServe(portAssign, r))
