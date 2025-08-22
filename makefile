@@ -9,4 +9,4 @@ openapi:
 	api/openapi.yaml
 
 debug: openapi
-	go run cmd/main.go
+	go run cmd/main/main.go
