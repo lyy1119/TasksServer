@@ -1,0 +1,25 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: tasks-db-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root                  # 修改成安全密码
+      # MYSQL_DATABASE: tasksdb                    # 如需首次自动建库
+      MYSQL_USER: tasks                          # 如需创建业务用户
+      MYSQL_PASSWORD: user                       # 修改成安全密码
+      TZ: Asia/Shanghai                          # 或 Asia/Tokyo 等
+    volumes:
+      - mysql_data:/var/lib/mysql                # 数据持久化（非常重要）
+      - ./db/config/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "33066:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql_data:
