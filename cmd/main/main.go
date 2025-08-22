@@ -41,6 +41,7 @@ func main() {
 		ConnMaxLifetime: time.Hour,
 		PingTimeout:     3 * time.Second})
 
+	fmt.Println("Starting Server...")
 	log.Fatal(http.ListenAndServe(port, r))
 
 }
