@@ -1,4 +1,28 @@
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VERSION: "${APP_VERSION:-dev}"
+    container_name: tasks_app
+    environment:
+      - MYSQL_ACCOUNT=tasks
+      - MYSQL_PWD=user
+      - MYSQL_ADDR=tasks-db-mysql:3306
+      - MYSQL_DB_NAME=tasks
+      - PORT=80
+    ports:
+      - "7777:80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/app/healthcheck"]
+      interval: 10s
+      timeout: 2s
+      retries: 3
+      start_period: 5s
+    networks:
+      - tasks
   mysql:
     image: mysql:8.0
     container_name: tasks-db-mysql
@@ -20,6 +44,12 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - tasks
 
 volumes:
   mysql_data:
+
+# 创建网络
+networks:
+  tasks:
