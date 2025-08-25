@@ -14,7 +14,7 @@ type Config struct {
 	MysqlDBName   string
 }
 
-func GetConfig() Config {
+func GetConfig() (Config, error) {
 	port, err := strconv.Atoi(os.Getenv("PORT"))
 	if err != nil {
 		fmt.Printf("Warning: config PORT=\"%s\", which is not a integer", os.Getenv("PORT"))
@@ -26,5 +26,5 @@ func GetConfig() Config {
 		MysqlPassword: os.Getenv("MYSQL_PWD"),
 		MysqlAddress:  os.Getenv("MYSQL_ADDR"),
 		MysqlDBName:   os.Getenv("MYSQL_DB_NAME")}
-	return result
+	return result, err
 }

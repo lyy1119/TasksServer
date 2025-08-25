@@ -1,11 +1,16 @@
 package api
 
 import (
+	"database/sql"
 	"net/http"
 	"time"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
-type Server struct{} // application interface
+type Server struct {
+	DB *sql.DB
+} // application interface
 
 // data struct
 type Task struct {
@@ -16,8 +21,10 @@ type Task struct {
 	CreatedAt   time.Time `json:"created_at"`
 }
 
-func NewServer() Server {
-	return Server{}
+func NewServer(db *sql.DB) Server {
+	return Server{
+		DB: db,
+	}
 }
 
 // Health check
