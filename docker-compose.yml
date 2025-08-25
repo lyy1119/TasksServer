@@ -32,6 +32,7 @@ services:
       # MYSQL_DATABASE: tasksdb                    # 如需首次自动建库
       MYSQL_USER: tasks                          # 如需创建业务用户
       MYSQL_PASSWORD: user                       # 修改成安全密码
+      MYSQL_DATABASE: tasks
       TZ: Asia/Shanghai                          # 或 Asia/Tokyo 等
     volumes:
       - mysql_data:/var/lib/mysql                # 数据持久化（非常重要）

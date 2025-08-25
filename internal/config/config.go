@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type Config struct {
@@ -17,7 +19,7 @@ type Config struct {
 func GetConfig() (Config, error) {
 	port, err := strconv.Atoi(os.Getenv("PORT"))
 	if err != nil {
-		fmt.Printf("Warning: config PORT=\"%s\", which is not a integer", os.Getenv("PORT"))
+		log.Warn(fmt.Sprintf("config PORT=\"%s\", which is not a integer. Use 80 as default", os.Getenv("PORT")))
 		port = 80
 	}
 	result := Config{
@@ -25,6 +27,6 @@ func GetConfig() (Config, error) {
 		MysqlAccount:  os.Getenv("MYSQL_ACCOUNT"),
 		MysqlPassword: os.Getenv("MYSQL_PWD"),
 		MysqlAddress:  os.Getenv("MYSQL_ADDR"),
-		MysqlDBName:   os.Getenv("MYSQL_DB_NAME")}
+		MysqlDBName:   os.Getenv("MYSQL_DATABASE")}
 	return result, err
 }
