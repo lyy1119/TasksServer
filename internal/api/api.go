@@ -2,9 +2,19 @@ package api
 
 import (
 	"net/http"
+	"time"
 )
 
-type Server struct{}
+type Server struct{} // application interface
+
+// data struct
+type Task struct {
+	ID          int64     `json:"id"`
+	Title       string    `json:"title"`
+	Description *string   `json:"description,omitempty"`
+	Done        bool      `json:"done"`
+	CreatedAt   time.Time `json:"created_at"`
+}
 
 func NewServer() Server {
 	return Server{}
