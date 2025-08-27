@@ -5,13 +5,12 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	log "github.com/sirupsen/logrus"
+	"github.com/lyy1119/TasksServer/internal/repository"
 )
 
 func writeJSON(w http.ResponseWriter, code int, v any) {
@@ -54,28 +53,15 @@ func (Server) GetHealthz(w http.ResponseWriter, r *http.Request) {
 func (s Server) GetTasks(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second) // 最多3秒查询操作
 	defer cancel()
-	// 查询
-	rows, err := s.DB.QueryContext(ctx,
-		`SELECT id, title, description, created_at
-		   FROM tasks
-		  ORDER BY id DESC
-		  LIMIT 100`)
+
+	// tasks is a slice
+	tasks, err := repository.ListTasks(ctx, s.DB, 100)
 	if err != nil {
-		log.Error(fmt.Sprintf("Database query timeout. Detial:\"%s\"", err))
 		httpError(w, err, http.StatusInternalServerError)
 		return
 	}
-	defer rows.Close()
-	var out []Task
-	for rows.Next() {
-		var t Task
-		if err := rows.Scan(&t.ID, &t.Title, &t.Description, &t.CreatedAt); err != nil {
-			httpError(w, err, http.StatusInternalServerError)
-			return
-		}
-		out = append(out, t)
-	}
-	writeJSON(w, http.StatusOK, out)
+
+	writeJSON(w, http.StatusOK, tasks)
 }
 
 // Create a new task
