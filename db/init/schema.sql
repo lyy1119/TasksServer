@@ -27,7 +27,7 @@ CREATE TABLE tasks (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,   -- 主键，自增
 
   -- 多用户预留：单用户阶段固定为 1
-  user_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL DEFAULT 1,
 
   title VARCHAR(200) NOT NULL,  -- 任务标题
   description TEXT,             -- 任务描述
