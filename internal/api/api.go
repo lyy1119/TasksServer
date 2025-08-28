@@ -4,9 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
-	"errors"
 	"net/http"
-	"strings"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -70,39 +68,14 @@ func (s Server) PostTasks(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
 	defer cancel()
 
-	var in struct {
-		Title       string  `json:"title"`
-		Description *string `json:"description"`
-	}
+	var in repository.Task
 	if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
 		httpError(w, err, http.StatusBadRequest)
 		return
 	}
-	if strings.TrimSpace(in.Title) == "" {
-		httpError(w, errors.New("title is required"), http.StatusBadRequest)
-		return
-	}
 
-	// 写入
-	res, err := s.DB.ExecContext(ctx,
-		`INSERT INTO tasks (title, description) VALUES (?, ?)`,
-		in.Title, in.Description)
-	if err != nil {
-		httpError(w, err, http.StatusInternalServerError)
-		return
-	}
-	id, _ := res.LastInsertId()
-
-	// 查询并返回新记录
-	var t Task
-	err = s.DB.QueryRowContext(ctx,
-		`SELECT id, title, description, created_at FROM tasks WHERE id = ?`, id).
-		Scan(&t.ID, &t.Title, &t.Description, &t.CreatedAt)
-	if err != nil {
-		httpError(w, err, http.StatusInternalServerError)
-		return
-	}
-	writeJSON(w, http.StatusCreated, t)
+	repository.CreateNewTask(ctx, s.DB, in)
+	writeJSON(w, http.StatusCreated, map[string]bool{"ok": true})
 }
 
 // Delete a task
