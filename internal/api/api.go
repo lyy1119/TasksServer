@@ -74,25 +74,43 @@ func (s Server) PostTasks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	repository.CreateNewTask(ctx, s.DB, in)
+	err := repository.CreateNewTask(ctx, s.DB, in)
+	if err != nil {
+		httpError(w, err, http.StatusBadRequest)
+		return
+	}
 	writeJSON(w, http.StatusCreated, map[string]bool{"ok": true})
 }
 
 // Delete a task
 // (DELETE /tasks/{id})
-func (Server) DeleteTasksId(w http.ResponseWriter, r *http.Request, id int) {
-
+func (s Server) DeleteTasksId(w http.ResponseWriter, r *http.Request, id int64) {
+	ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+	defer cancel()
+	if err := repository.DeleteTasksByID(ctx, s.DB, id); err != nil {
+		httpError(w, err, 400)
+		return
+	} else {
+		writeJSON(w, 204, nil)
+	}
 }
 
 // Get a task by ID
 // (GET /tasks/{id})
-func (Server) GetTasksId(w http.ResponseWriter, r *http.Request, id int) {
-
+func (s Server) GetTasksId(w http.ResponseWriter, r *http.Request, id int64) {
+	ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+	defer cancel()
+	pTask, err := repository.GetTaskByID(ctx, s.DB, id)
+	if err != nil {
+		httpError(w, err, 400)
+		return
+	}
+	writeJSON(w, 200, pTask)
 }
 
 // Update a task
 // (PUT /tasks/{id})
-func (Server) PutTasksId(w http.ResponseWriter, r *http.Request, id int) {
+func (Server) PutTasksId(w http.ResponseWriter, r *http.Request, id int64) {
 
 }
 

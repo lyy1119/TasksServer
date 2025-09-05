@@ -152,6 +152,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
       responses:
         '200':
           description: A task
@@ -171,6 +172,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
       requestBody:
         required: true
         content:
@@ -192,6 +194,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
       responses:
         '204':
           description: Task deleted
@@ -239,6 +242,7 @@ components:
         id:
           type: integer
           example: 101
+          format: int64
         title:
           type: string
           example: Finish homework

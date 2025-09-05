@@ -16,7 +16,7 @@ import (
 type Task struct {
 	Completed   *bool   `json:"completed,omitempty"`
 	Description *string `json:"description,omitempty"`
-	Id          *int    `json:"id,omitempty"`
+	Id          *int64  `json:"id,omitempty"`
 	Title       *string `json:"title,omitempty"`
 	UserId      *int    `json:"userId,omitempty"`
 }
@@ -79,13 +79,13 @@ type ServerInterface interface {
 	PostTasks(w http.ResponseWriter, r *http.Request)
 	// Delete a task
 	// (DELETE /tasks/{id})
-	DeleteTasksId(w http.ResponseWriter, r *http.Request, id int)
+	DeleteTasksId(w http.ResponseWriter, r *http.Request, id int64)
 	// Get a task by ID
 	// (GET /tasks/{id})
-	GetTasksId(w http.ResponseWriter, r *http.Request, id int)
+	GetTasksId(w http.ResponseWriter, r *http.Request, id int64)
 	// Update a task
 	// (PUT /tasks/{id})
-	PutTasksId(w http.ResponseWriter, r *http.Request, id int)
+	PutTasksId(w http.ResponseWriter, r *http.Request, id int64)
 	// Get all users
 	// (GET /users)
 	GetUsers(w http.ResponseWriter, r *http.Request)
@@ -127,19 +127,19 @@ func (_ Unimplemented) PostTasks(w http.ResponseWriter, r *http.Request) {
 
 // Delete a task
 // (DELETE /tasks/{id})
-func (_ Unimplemented) DeleteTasksId(w http.ResponseWriter, r *http.Request, id int) {
+func (_ Unimplemented) DeleteTasksId(w http.ResponseWriter, r *http.Request, id int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Get a task by ID
 // (GET /tasks/{id})
-func (_ Unimplemented) GetTasksId(w http.ResponseWriter, r *http.Request, id int) {
+func (_ Unimplemented) GetTasksId(w http.ResponseWriter, r *http.Request, id int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Update a task
 // (PUT /tasks/{id})
-func (_ Unimplemented) PutTasksId(w http.ResponseWriter, r *http.Request, id int) {
+func (_ Unimplemented) PutTasksId(w http.ResponseWriter, r *http.Request, id int64) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -230,7 +230,7 @@ func (siw *ServerInterfaceWrapper) DeleteTasksId(w http.ResponseWriter, r *http.
 	var err error
 
 	// ------------- Path parameter "id" -------------
-	var id int
+	var id int64
 
 	err = runtime.BindStyledParameterWithOptions("simple", "id", chi.URLParam(r, "id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
 	if err != nil {
@@ -255,7 +255,7 @@ func (siw *ServerInterfaceWrapper) GetTasksId(w http.ResponseWriter, r *http.Req
 	var err error
 
 	// ------------- Path parameter "id" -------------
-	var id int
+	var id int64
 
 	err = runtime.BindStyledParameterWithOptions("simple", "id", chi.URLParam(r, "id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
 	if err != nil {
@@ -280,7 +280,7 @@ func (siw *ServerInterfaceWrapper) PutTasksId(w http.ResponseWriter, r *http.Req
 	var err error
 
 	// ------------- Path parameter "id" -------------
-	var id int
+	var id int64
 
 	err = runtime.BindStyledParameterWithOptions("simple", "id", chi.URLParam(r, "id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
 	if err != nil {

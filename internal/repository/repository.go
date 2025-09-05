@@ -21,7 +21,9 @@ type Task struct {
 
 // a == b return true
 func compareTasks(a *Task, b *Task) bool {
-	return (a.Title == b.Title && a.Description == b.Description)
+	log.Debug(fmt.Sprintln("Call Function compareTasks.", "a=", *a, "b=", *b, "a.Description=", *(a.Description), "b.Description=", *(b.Description)))
+
+	return (a.Title == b.Title && *(a.Description) == *(b.Description))
 }
 
 func ListTasks(ctx context.Context, db *sql.DB, limit int) ([]Task, error) {
@@ -99,6 +101,20 @@ func CreateNewTask(ctx context.Context, db *sql.DB, task Task) error {
 	return nil
 }
 
-func DeleteTasksByID(ctx context.Context, db *sql.DB, id int64) (bool, error) {
-	return true, nil
+func DeleteTasksByID(ctx context.Context, db *sql.DB, id int64) error {
+	res, err := db.ExecContext(ctx, `DELETE FROM tasks WHERE id = ?`, id)
+	if err != nil {
+		log.Warn(fmt.Sprintf("Error occurs when DELETE a row from database. Detial: %s", err))
+		return err
+	}
+
+	affected, err := res.RowsAffected()
+	if err != nil {
+		log.Warn(fmt.Sprintf("Error occurs when DELETE a row from database. Detial: %s", err))
+		return err
+	}
+	if affected == 0 {
+		return errors.New("id not found")
+	}
+	return nil
 }
